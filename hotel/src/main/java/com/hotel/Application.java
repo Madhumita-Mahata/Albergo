@@ -21,7 +21,7 @@ public class Application {
 	@Bean // method level annotation - to tell SC , following method
 	// rets an object - which has to be managed as a spring bean
 	// manages - life cycle +
-	public ModelMapper modelMapper() {
+	public ModelMapper modelMapper() { 
 		System.out.println("in model mapper creation");
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration()
