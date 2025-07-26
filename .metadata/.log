@@ -1110,6 +1110,7 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+<<<<<<< HEAD
 !SESSION 2025-07-26 16:28:00.089 -----------------------------------------------
 eclipse.buildId=4.35.0.202504180233
 java.version=21.0.6
@@ -1318,3 +1319,5 @@ java.util.concurrent.TimeoutException
 	at org.eclipse.jface.text.reconciler.MonoReconciler.initialProcess(MonoReconciler.java:100)
 	at org.eclipse.jdt.internal.ui.text.JavaReconciler.initialProcess(JavaReconciler.java:421)
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:177)
+=======
+>>>>>>> 553036a1279324dbf09fd6c8217c264bc754f11b

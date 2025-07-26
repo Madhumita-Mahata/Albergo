@@ -17,6 +17,7 @@
 		<item key="width" value="600"/>
 		<item key="height" value="400"/>
 	</section>
+<<<<<<< HEAD
 	<section name="NewInterfaceCreationWizard.dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="614"/>
 		<item key="DIALOG_Y_ORIGIN" value="84"/>
@@ -45,4 +46,6 @@
 		<item key="updateQualifiedNames" value="false"/>
 		<item key="patterns" value="*"/>
 	</section>
+=======
+>>>>>>> 553036a1279324dbf09fd6c8217c264bc754f11b
 </section>
