@@ -1,12 +1,17 @@
 package com.hotel.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,33 +25,43 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(of = "name", callSuper = false)
+@ToString(callSuper = true, exclude = {"booking","feedbacks"})
+@EqualsAndHashCode(of = "userId", callSuper = false)
 
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
-	private long userId;
-	@Column(name = "user_name", length = 20)
-	private String name;
-	@Column(length = 30, unique = true)
+	private Long userId;
+	
+	@Column(name = "first_name", length = 20, nullable = false)
+	private String firstName;
+	
+	@Column(name = "last_name", length = 20, nullable = false)
+	private String lastName;
+	
+	@Column(length = 30, unique = true, nullable = false)
 	private String email;
-	@Column(length = 200, nullable = false)
+	
+	@Column(length = 10, nullable = false)
 	private String password;
-	@Column(length = 10)
+	
+	@Column(length = 10, nullable = false)
 	private String phone;
-	@Column(length = 15)
+	
+	@Column(length = 15, nullable = false)
 	private String gender;
-	@Column(name = "user_address", length = 255)
-	private String address;
-	@Column(name = "user_id", length =12)
-	private String IdCard;
+	
+	@Column(name = "id_card", length = 12, nullable = false)
+	private String idCardNumber;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
-	private Role role = Role.USER;
+	private Role role;
 	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Booking> booking = new ArrayList<>();
 	
-	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Feedback> feedbacks = new ArrayList<>();
 	
 }
