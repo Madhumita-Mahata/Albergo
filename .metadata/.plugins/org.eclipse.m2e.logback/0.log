@@ -259,3 +259,7 @@
 2025-07-28 01:10:05,345 [Worker-63: Launching hotel - Application] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
 2025-07-28 01:15:18,767 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@6ea7fbf4{STOPPING}[12.0.16,sto=0]
 2025-07-28 01:15:18,784 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@1f1a7a91{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
+2025-07-28 11:59:05,991 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-07-28 18:13:42,457 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-07-28 18:13:42,492 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-07-28 18:13:42,501 [Worker-29: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
