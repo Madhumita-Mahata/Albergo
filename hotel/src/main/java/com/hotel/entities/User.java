@@ -51,8 +51,8 @@ public class User {
 	@Column(length = 15, nullable = false)
 	private String gender;
 	
-	@Column(name = "id_card", length = 12, nullable = false)
-	private String idCardNumber;
+	@Column(name = "id_card", length = 12)
+	private String idCard;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
