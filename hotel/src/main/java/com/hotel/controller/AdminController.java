@@ -72,7 +72,7 @@ public class AdminController {
 	}
 	
 	//GET USER BY ROLE
-	@GetMapping("/user/{role}")
+	@GetMapping("/user/role/{role}")
 	public ResponseEntity<?> getUserByRole(@PathVariable("role") String role) {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(adminService.getUserByRole(role));

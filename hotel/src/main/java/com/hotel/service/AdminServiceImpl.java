@@ -72,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<UserRespDto> getUserByRole(String role) {
-		Role role1 = Role.valueOf(role);
+		Role role1 = Role.valueOf(role.toUpperCase());
 		List<User> users = userDao.findByRole(role1);
 		return users
 				.stream()

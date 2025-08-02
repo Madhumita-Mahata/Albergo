@@ -64,4 +64,6 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Feedback> feedbacks = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Payment> payments = new ArrayList<>();	
 }

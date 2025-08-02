@@ -1,17 +1,16 @@
 package com.hotel.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,37 +18,32 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @Entity
-@Table(name = "rooms")
+@Table(name = "payments")
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "booking")
-@EqualsAndHashCode(of = "roomId",callSuper = false)
-public class Room {
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = "paymentId", callSuper = false)
+public class Payment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long roomId;
-	
-	@Column(nullable = false,unique = true)
-	private String roomNumber;
+	private Long paymentId;
 	
 	@Column(nullable = false)
-	private String occupacy;
+	private double amount;
+	
+	@Column(nullable = false)
+	private LocalDate paymentDate = LocalDate.now();
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Category category;
+	private Method method;
 	
-	@Column(nullable = false)
-	private double price;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Status status = Status.AVAILABLE;
-	
-	@OneToMany(mappedBy = "room", orphanRemoval = true ,fetch = FetchType.LAZY)
-	private List<Booking> booking = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 }
