@@ -22,7 +22,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true, exclude = "user")
 @EqualsAndHashCode(of = "feedbackId", callSuper = false)
-public class Feedback {
+public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

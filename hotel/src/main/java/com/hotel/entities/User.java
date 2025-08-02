@@ -62,7 +62,7 @@ public class User {
 	private List<Booking> booking = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Feedback> feedbacks = new ArrayList<>();
+	private List<Review> feedbacks = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Payment> payments = new ArrayList<>();	
