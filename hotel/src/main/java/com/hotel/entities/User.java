@@ -63,5 +63,10 @@ public class User {
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Feedback> feedbacks = new ArrayList<>();
+
+	public Object getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
