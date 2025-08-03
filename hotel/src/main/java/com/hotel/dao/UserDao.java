@@ -1,13 +1,18 @@
 package com.hotel.dao;
 
+<<<<<<< HEAD
+=======
+import java.util.List;
+>>>>>>> 9ae400196ed3dfa7ab7220074a4c543dfae96560
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.hotel.entities.Role;
 import com.hotel.entities.User;
 
-public interface UserDao extends JpaRepository<User, Long> {
 
+<<<<<<< HEAD
 	boolean existsByEmail(String email);
 
 
@@ -15,4 +20,12 @@ public interface UserDao extends JpaRepository<User, Long> {
 
 
 	Optional<User> findByUserId(Long id);
+=======
+
+public interface UserDao extends JpaRepository<User, Long> {
+	
+	boolean existsByEmail(String email);
+
+	List<User> findByRole(Role role);
+>>>>>>> 9ae400196ed3dfa7ab7220074a4c543dfae96560
 }

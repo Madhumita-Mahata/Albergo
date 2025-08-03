@@ -51,8 +51,8 @@ public class User {
 	@Column(length = 15, nullable = false)
 	private String gender;
 	
-	@Column(name = "id_card", length = 12, nullable = false)
-	private String idCardNumber;
+	@Column(name = "id_card", length = 12)
+	private String idCard;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
@@ -62,11 +62,17 @@ public class User {
 	private List<Booking> booking = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+<<<<<<< HEAD
 	private List<Feedback> feedbacks = new ArrayList<>();
 
 	public Object getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+=======
+	private List<Review> feedbacks = new ArrayList<>();
+>>>>>>> 9ae400196ed3dfa7ab7220074a4c543dfae96560
 	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Payment> payments = new ArrayList<>();	
 }

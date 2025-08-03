@@ -13,12 +13,13 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class UserRespDto {
-	private String name;
+	private String firstName;
+	private String lastName;
 	private String email;
+	private String password;
 	private String phone;
 	private String gender;
-	private String address;
-	private String Idcard;
+	private String idCard;
 	private Role role;
 
 }

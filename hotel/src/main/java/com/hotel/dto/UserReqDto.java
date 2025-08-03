@@ -1,9 +1,6 @@
 package com.hotel.dto;
 
-import com.hotel.entities.Role;
-
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -24,19 +21,17 @@ public class UserReqDto {
 	@NotBlank(message = "please enter email")
 	private String email;
 	
-	@Pattern(regexp="((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,8})",
+	@Pattern(regexp="((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,20})",
 			message = "Invalid password format !!!")
 	private String password;
 	
 	@NotBlank(message = "please enter your phone number")
-	@Max(value = 10)
 	private String phone;
 	
 	@NotBlank(message = "gender cannot be blank")
 	private String gender;
 	
-	@NotBlank(message = "please enter your IDcard number")
-	private String IdcardNumber;
+	private String idCard;
 
-	private Role role = Role.CUSTOMER;
+	private String role;
 }
