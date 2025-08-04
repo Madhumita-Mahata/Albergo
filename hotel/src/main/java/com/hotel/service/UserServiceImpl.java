@@ -250,30 +250,108 @@ public class UserServiceImpl implements UserService {
 
        if(booking.getPayment() != null) {
            throw new ApiException("Payment already exists for this booking");}
+      
+       //CHECK PRICE
+       //USER WILL PAY FOR STAY
        Room room = booking.getRoom();
-       LocalDate checkIn = booking.getCheckInDate();
-       LocalDate checkOut = booking.getCheckOutDate();
-
-       if (room == null || checkIn == null || checkOut == null || !checkOut.isAfter(checkIn)) {
-           throw new ApiException("Invalid booking details for price calculation.");
-       }
-
-       long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
-       double expectedAmount = nights * room.getPricePerNight(); // assuming price is per night
-
-       final double TOLERANCE = 0.01;
-
-       if (Math.abs(paymentDTO.getAmount() - expectedAmount) > TOLERANCE) {
-           throw new ApiException("Invalid payment amount. Expected: " + expectedAmount);
-       }
-
+       double expectedAmount = room.getPricePerDay();
        
-	}
+       if(paymentDTO.getAmount()!=expectedAmount) {
+       	throw new ApiException("Invalid payment amount. Expected: " + expectedAmount);
+       }
+       
+       Payment payment = new Payment();
+       payment.setAmount(paymentDTO.getAmount());
+       payment.setPaymentDate(LocalDateTime.now());
+       payment.setPaymentStatus(paymentDTO.getPaymentStatus() != null ? paymentDTO.getPaymentStatus() : PaymentStatus.SUCCESS);
+       payment.setBooking(booking);
 
+       Payment savedPayment = paymentDao.save(payment);
+
+       booking.setPayment(savedPayment);
+       bookingDao.save(booking);
+
+      
+   //MAP to BookingRespDTO including payment info
+       //Map to BookingRespDTO including payment info
+       BookingRespDTO respDto = modelMapper.map(booking, BookingRespDTO.class);
+       respDto.setRoomId(booking.getRoom().getRoomId());
+       respDto.setUserId(booking.getUser().getUserId());
+       respDto.setUserName(booking.getUser().getName());
+       
+     //Payment info
+       respDto.setPaymentId(savedPayment.getPaymentId());
+       respDto.setAmount(savedPayment.getAmount());
+       respDto.setPaymentStatus(savedPayment.getPaymentStatus());
+       respDto.setPaymentDate(savedPayment.getPaymentDate());
+
+       return respDto;
+	}
+   
+   //UPDATE COMPLETE BOOKING
+   
+   @Scheduled(cron = "0 0 1 * * ?") // Runs daily at 1 AM
+   public void updateCompletedBookings() {
+       LocalDate today = LocalDate.now();
+
+       // Step 1: Mark expired bookings as COMPLETED
+       List<Booking> bookingsToComplete = bookingDao.findBookingsToMarkCompleted(today);
+       for (Booking booking : bookingsToComplete) {
+           booking.setStatus(BookingStatus.COMPLETED);
+           bookingDao.save(booking);
+       }
+
+       // Step 2: For all affected rooms, update their currentOccupancy based on today
+       Set<Room> affectedRooms = bookingsToComplete.stream()
+           .map(booking -> booking.getRoom())
+           .collect(Collectors.toSet());
+
+       for (Room room : affectedRooms) {
+           int currentOccupants = bookingDao.countCurrentOccupants(room, today, BookingStatus.BOOKED);
+           room.setCurrentOccupancy(currentOccupants);
+           if (currentOccupants == 0) {
+               room.setStatus(RoomStatus.AVAILABLE);
+           } else {
+               room.setStatus(RoomStatus.OCCUPIED);
+           }
+           roomDao.save(room);
+       }
+
+       //GET ALL BOOKINGS BY USERID
 	@Override
 	public List<BookingRespDto> getBookingsByUserId(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userDao.findByUserId(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+		
+		List<Booking> bookings = bookingDao.findByUserUserId(userId);
+		
+		if(bookings.isEmpty()) {
+			throw new ResourceNotFoundException("No bookings found for this user");
+		}
+		
+		return bookings.stream().map(booking -> {
+			BookingRespDTO dto = modelMapper.map(booking, BookingRespDTO.class);
+			
+		//SET ROOM AND PGPROPERTY
+	        if (booking.getRoom() != null) {
+	            dto.setRoomId(booking.getRoom().getRoomId());
+	     }
+		
+	      //SET USER
+	        if (booking.getUser() != null) {
+	            dto.setUserId(booking.getUser().getUserId());
+	            dto.setUserName(booking.getUser().getName());
+	        }
+		}
+	        //SET PAYMENT
+	        if (booking.getPayment() != null) {
+	            dto.setPaymentId(booking.getPayment().getPaymentId());
+	            dto.setAmount(booking.getPayment().getAmount());
+	            dto.setPaymentStatus(booking.getPayment().getPaymentStatus());
+	            dto.setPaymentDate(booking.getPayment().getPaymentDate());
+	        }
+	        return dto;
+	    }).collect(Collectors.toList());
 	}
 
 	@Override
@@ -282,22 +360,100 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	
+	//CANCEL BOOKING USING USERID AND BOOKINGID
 	@Override
 	public BookingRespDto getBookingById(Long bookingId) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userDao.findByUserId(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+	 
+	 Booking booking = bookingDao.findById(bookingId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+	    
+	  if(!booking.getUser().getUserId().equals(userId)) {
+		  throw new ResourceNotFoundException("Booking does not belong to this user");
+	  }
+	  
+	  if (booking.getStatus() == BookingStatus.CANCELLED) {
+	        throw new ApiException("Booking is already cancelled");
+	   }
+	  
+	  booking.setStatus(BookingStatus.CANCELLED);
+	  
+	  Room room = booking.getRoom();
+	  if(room !=null) {
+		  room.setStatus(RoomStatus.AVAILABLE);	
+		  if(room.getCurrentOccupancy()>0) {
+			  room.setCurrentOccupancy(room.getCurrentOccupancy()-1);
+		  }
+		  roomDao.save(room);
+	 }
+	    
+	  bookingDao.save(booking);
+	  
+	  
+	  BookingRespDTO dto = modelMapper.map(booking, BookingRespDTO.class);
+	    dto.setUserId(user.getUserId());
+	    dto.setUserName(user.getName());
+	    if (booking.getRoom() != null) {
+	        dto.setRoomId(booking.getRoom().getRoomId());
+	    }
+	    if (booking.getPayment() != null) {
+	        dto.setPaymentId(booking.getPayment().getPaymentId());
+	        dto.setAmount(booking.getPayment().getAmount());
+	        dto.setPaymentStatus(booking.getPayment().getPaymentStatus());
+	        dto.setPaymentDate(booking.getPayment().getPaymentDate());
+	    }
+
+	    return dto;
+	    
 	}
 
-	@Override
-	public void updateCompletedBookings() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public RequestedServiceResponseDto requestService(@Valid RequestServiceDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userDao.findById(dto.getUserId())
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+	    HotelService service = serviceDao.findById(dto.getServiceId())
+	            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+		
+	    Room room = roomDao.findById(dto.getRoomId())
+	            .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+
+	 // Check if user has a valid booking for the given room
+	    Optional<Booking> bookingOpt = bookingDao.findByUserUserIdAndRoomRoomIdAndStatusNot(
+	        user.getUserId(), room.getRoomId(), BookingStatus.CANCELLED);
+
+	    if (bookingOpt.isEmpty()) {
+	        throw new ApiException("User does not have a valid booking for this room");
+	    }
+	    UserServiceRequest req = modelMapper.map(dto, UserServiceRequest.class);
+		  req.setUser(user);
+		  req.setService(service);
+		  req.setStatus(ServiceStatus.REQUESTED);
+		  req.setRequestDate(LocalDate.now());
+	    
+		  UserServiceRequest saved  = userServiceRequestDao.save(req);
+		  
+		  RequestedServiceResponseDTO respDto = modelMapper.map(saved, RequestedServiceResponseDTO.class);
+		
+		  respDto.setUserId(saved.getUser().getUserId());
+		  respDto.setUserName(saved.getUser().getName());
+		  
+		  respDto.setServiceId(saved.getService().getServiceId());
+		  respDto.setServiceName(saved.getService().getName());
+		  respDto.setServiceDescription(saved.getService().getDescription());
+		  respDto.setServicePrice(saved.getService().getPrice());
+		  
+		  respDto.setRoomId(room.getRoomId());
+		  
+		  return respDto;
+		}
+	    
+		
 	}
 
 }
