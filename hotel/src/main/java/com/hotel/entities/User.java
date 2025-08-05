@@ -64,4 +64,5 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Review> reviews = new ArrayList<>();
 		
+
 }

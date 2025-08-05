@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public String changePassword(ChangePasswordDto dto) {
 		User user = userDao.findByEmail(dto.getEmail())
-				 .orElseThrow(() -> new ApiException("User not found"));
+				 (() -> new ApiException("User not found"));
 		
 		//validate old password
 		   // Validate old password
