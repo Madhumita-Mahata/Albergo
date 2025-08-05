@@ -25,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString(callSuper = true, exclude = {"booking","feedbacks"})
+@ToString(callSuper = true, exclude = {"booking","reviews"})
 @EqualsAndHashCode(of = "userId", callSuper = false)
 
 public class User {
@@ -42,7 +42,7 @@ public class User {
 	@Column(length = 30, unique = true, nullable = false)
 	private String email;
 	
-	@Column(length = 10, nullable = false)
+	@Column(length = 10)
 	private String password;
 	
 	@Column(length = 10, nullable = false)
@@ -62,8 +62,6 @@ public class User {
 	private List<Booking> booking = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Review> feedbacks = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Payment> payments = new ArrayList<>();	
+	private List<Review> reviews = new ArrayList<>();
+		
 }

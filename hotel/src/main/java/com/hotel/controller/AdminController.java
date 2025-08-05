@@ -18,7 +18,6 @@ import com.hotel.service.AdminService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -53,6 +52,14 @@ public class AdminController {
 	{
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(adminService.getUserById(userid));
+	}
+	
+	//GET USER BY EMAIL
+	@GetMapping("/users/email/{email}")
+	public ResponseEntity<?>getUserByEmail(@PathVariable("email") String email)
+	{
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(adminService.getUserByEmail(email));
 	}
 	
 	//UPDATE USER DETAILS

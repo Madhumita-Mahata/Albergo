@@ -16,7 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "feedbacks")
+@Table(name = "reviews")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long feedbackId;
+	private Long reviewId;
 	
 	private String comments;
 	

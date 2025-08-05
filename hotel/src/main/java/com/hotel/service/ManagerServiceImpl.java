@@ -66,7 +66,7 @@ public class ManagerServiceImpl implements ManagerService {
 	public Room updateRoom(Long id, Room room) {
 		Room room1 = roomDao.findById(id)
 				.orElseThrow(()->new ResourceNotFoundException("Invalid id"));
-		return roomDao.save(room);
+		return roomDao.save(room1);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ManagerServiceImpl implements ManagerService {
 	public Room updateRoomByRoomNumber(String id, Room room) {
 		Room room1 = roomDao.findByRoomNumber(id)
 				.orElseThrow(()->new ResourceNotFoundException("Invalid room number"));
-		return roomDao.save(room);
+		return roomDao.save(room1);
 	}
 
 	@Override

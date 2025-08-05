@@ -15,6 +15,8 @@ public interface AdminService {
 	
 	UserRespDto getUserById(Long id);
 	
+	UserRespDto getUserByEmail(String email);
+	
 	User updateDetails(Long id, User user);
 	
 	ApiResponse deleteUser(Long id);

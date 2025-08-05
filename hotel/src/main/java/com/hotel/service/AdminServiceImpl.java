@@ -80,5 +80,12 @@ public class AdminServiceImpl implements AdminService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public UserRespDto getUserByEmail(String email) {
+		User user = userDao.findByEmail(email)
+				.orElseThrow(()->new ResourceNotFoundException("Invalid id"));
+		return modelMapper.map(user, UserRespDto.class);
+	}
+
 	
 }
