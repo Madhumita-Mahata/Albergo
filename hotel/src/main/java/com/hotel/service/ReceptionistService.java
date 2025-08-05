@@ -8,9 +8,13 @@ import com.hotel.dto.BookingReqDto;
 import com.hotel.dto.BookingRespDto;
 import com.hotel.dto.CustomerReqDto;
 import com.hotel.dto.CustomerRespDto;
+import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.PaymentReqDto;
+import com.hotel.dto.UserRespDto;
 
 public interface ReceptionistService {
+	
+	UserRespDto loginUser(LoginReqDto loginDto);
 
 	CustomerRespDto registerCustomer(CustomerReqDto reqDto);
 	

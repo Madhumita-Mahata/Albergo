@@ -4,18 +4,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hotel.custom_exception.ApiException;
 import com.hotel.custom_exception.ResourceNotFoundException;
 import com.hotel.dao.RoomDao;
+import com.hotel.dao.UserDao;
 import com.hotel.dto.ApiResponse;
 import com.hotel.dto.ChangePasswordDto;
+import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.RoomReqDto;
 import com.hotel.dto.RoomRespDto;
+import com.hotel.dto.UserRespDto;
 import com.hotel.entities.Category;
 import com.hotel.entities.Room;
+import com.hotel.entities.User;
 
 import lombok.AllArgsConstructor;
 
@@ -25,8 +30,19 @@ import lombok.AllArgsConstructor;
 public class ManagerServiceImpl implements ManagerService {
 
 	private final ModelMapper modelMapper;
-	
+	private final BCryptPasswordEncoder passwordEncoder;
 	private final RoomDao roomDao;
+	private final UserDao userDao;
+	
+	@Override
+	public UserRespDto loginUser(LoginReqDto loginDto) {
+		User user = userDao.findByEmail(loginDto.getEmail())
+				.orElseThrow(()->new ApiException("Invalid email or password"));
+		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+			throw new ApiException("Invalid email or password");
+		}
+		return modelMapper.map(user, UserRespDto.class);
+	}
 	
 	@Override
 	public RoomRespDto addRooms(RoomReqDto roomDto) {

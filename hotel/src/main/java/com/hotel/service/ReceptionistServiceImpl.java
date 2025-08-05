@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,9 @@ import com.hotel.dto.BookingReqDto;
 import com.hotel.dto.BookingRespDto;
 import com.hotel.dto.CustomerReqDto;
 import com.hotel.dto.CustomerRespDto;
+import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.PaymentReqDto;
+import com.hotel.dto.UserRespDto;
 import com.hotel.entities.Booking;
 import com.hotel.entities.BookingStatus;
 import com.hotel.entities.Method;
@@ -43,11 +46,24 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReceptionistServiceImpl implements ReceptionistService {
 	
+
+	private final BCryptPasswordEncoder passwordEncoder;
 	private final ModelMapper modelMapper;
 	private final UserDao userDao;
 	private final RoomDao roomDao;
 	private final BookingDao bookingDao;
 	private final PaymentDao paymentDao;
+	
+	@Override
+	public UserRespDto loginUser(LoginReqDto loginDto) {
+		User user = userDao.findByEmail(loginDto.getEmail())
+				.orElseThrow(()->new ApiException("Invalid email or password"));
+		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+			throw new ApiException("Invalid email or password");
+		}
+		return modelMapper.map(user, UserRespDto.class);
+	}
+
 
 	@Override
 	public CustomerRespDto getCustomerById(Long id) {
@@ -388,11 +404,6 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	    // Set Room and PGProperty
 	    if (booking.getRoom() != null) {
 	        dto.setRoomId(booking.getRoom().getRoomId());
-
-//	        if (booking.getRoom().getPgproperty() != null) {
-//	            dto.setPgPropertId(booking.getRoom().getPgproperty().getPgId());
-//	            dto.setPgPropertyName(booking.getRoom().getPgproperty().getName());
-//	        }
 	    }
 
 	    // Set User

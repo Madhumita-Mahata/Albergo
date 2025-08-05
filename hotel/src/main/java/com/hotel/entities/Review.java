@@ -21,16 +21,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true, exclude = "user")
-@EqualsAndHashCode(of = "feedbackId", callSuper = false)
+@EqualsAndHashCode(of = "reviewId", callSuper = false)
 public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long reviewId;
 	
-	private String comments;
-	
 	private int rating;
+	
+	private String comment;
 	
 	private LocalDate date = LocalDate.now();
 	

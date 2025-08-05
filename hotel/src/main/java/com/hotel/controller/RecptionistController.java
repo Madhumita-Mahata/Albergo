@@ -30,41 +30,41 @@ public class RecptionistController {
 	
 	private final ReceptionistService receptionistService;
 	
-	@PostMapping("/customer/register")
+	@PostMapping("/guest/register")
 	public ResponseEntity<?> addCustomer(@RequestBody CustomerReqDto custDto)
 	{
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(receptionistService.registerCustomer(custDto));
 	}
 	
-	@GetMapping("/customer/{custid}")
+	@GetMapping("/guest/{custid}")
 	public ResponseEntity<?>getCustById(@PathVariable("custid") Long custid)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(receptionistService.getCustomerById(custid));
 	}
 	
-	@GetMapping("/customers")
+	@GetMapping("/guests")
 	public ResponseEntity<?>getAllCustomers()
 	{
 		return ResponseEntity
 				.ok(receptionistService.getAllCustomer());
 	}
 	
-	@GetMapping("/customer/email/{email}")
+	@GetMapping("/guest/email/{email}")
 	public ResponseEntity<?>getCustomerByEmail(@PathVariable("email") String email)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(receptionistService.getCustomerByEmail(email));
 	}
 	
-	@PostMapping("/bookings")
+	@PostMapping("/guest/bookings")
 	public ResponseEntity<?> makeBooking(@Valid @RequestBody BookingReqDto dto){
 		return ResponseEntity.ok(receptionistService.createBooking(dto));
 	}
 	
 	//MAKE PAYMENT
-	@PostMapping("/{bookingId}/payment")
+	@PostMapping("/guest/{bookingId}/payment")
     public ResponseEntity<?> makePayment(
             @PathVariable("bookingId") Long bookingId,
             @Valid @RequestBody PaymentReqDto paymentDto) {
@@ -73,27 +73,27 @@ public class RecptionistController {
     }
 	
 	//GET ALL BOOKINGS BY USERID
-	@GetMapping("/bookings/users/{userId}")
+	@GetMapping("/guest/bookings/users/{userId}")
     public ResponseEntity<List<BookingRespDto>> getBookingsByUserId(@PathVariable("userId") Long userId) {
         List<BookingRespDto> resp = receptionistService.getBookingsByUserId(userId);
         return ResponseEntity.ok(resp);
     }
 	
 	//GET BOOKINGS BY BOOKINGID
-		@GetMapping("/bookings/{bookingId}")
+		@GetMapping("/guest/bookings/{bookingId}")
 	    public ResponseEntity<?> getBookingsByBookingId(@PathVariable("bookingId") Long bookingId) {
 	        return ResponseEntity.status(HttpStatus.OK)
 	        		.body(receptionistService.getBookingById(bookingId));
 	    }
 
 	//DELETE BY USERID
-	@PutMapping("/bookings/cancel/{userId}/{bookingId}")
+	@PutMapping("/guest/bookings/cancel/{userId}/{bookingId}")
 	public ResponseEntity<?> cancelBookingsByUserId(@PathVariable("userId") Long userId, @PathVariable("bookingId") Long bookingId) {
 	    return ResponseEntity.status(HttpStatus.OK)
 	    		.body(receptionistService.cancelBooking(userId,  bookingId));
 	}
 	
-	@GetMapping("/bookings/update-status")
+	@GetMapping("/guest/bookings/update-status")
 	public ResponseEntity<String> manuallyUpdateBookings() {
 	    receptionistService.updateCompletedBookingsAndRooms();
 	    return ResponseEntity.ok("Bookings updated");

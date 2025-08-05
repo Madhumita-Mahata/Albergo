@@ -4,11 +4,15 @@ import java.util.List;
 
 import com.hotel.dto.ApiResponse;
 import com.hotel.dto.ChangePasswordDto;
+import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.RoomReqDto;
 import com.hotel.dto.RoomRespDto;
+import com.hotel.dto.UserRespDto;
 import com.hotel.entities.Room;
 
 public interface ManagerService {
+	
+	UserRespDto loginUser(LoginReqDto loginDto);
 	
 	RoomRespDto addRooms(RoomReqDto roomdto);
 	
