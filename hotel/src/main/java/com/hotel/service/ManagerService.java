@@ -5,6 +5,7 @@ import java.util.List;
 import com.hotel.dto.ApiResponse;
 import com.hotel.dto.ChangePasswordDto;
 import com.hotel.dto.LoginReqDto;
+import com.hotel.dto.ReviewRespDto;
 import com.hotel.dto.RoomReqDto;
 import com.hotel.dto.RoomRespDto;
 import com.hotel.dto.UserRespDto;
@@ -33,5 +34,9 @@ public interface ManagerService {
 	ApiResponse deleteRoomByRoomNumber(String roomNo);
 	
 	String changePassword(ChangePasswordDto dto);
+	
+	List<ReviewRespDto> getReviewById(Long userId);
+	
+	List<ReviewRespDto> getAllReviews();
 
 }

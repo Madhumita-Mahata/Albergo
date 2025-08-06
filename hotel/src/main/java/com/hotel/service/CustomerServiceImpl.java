@@ -90,10 +90,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 	//CHANGE PASSWORD
 	@Override
-	public String changePassword(ChangePasswordDto dto) {
-		User user = userDao.findByEmail(dto.getEmail())
-				 (() -> new ApiException("User not found"));
+	public ApiResponse changePassword(ChangePasswordDto dto) {
 		
+		User user = userDao.findByEmail(dto.getEmail())
+				.orElseThrow(()->new ApiException("User not found"));
+			
 		//validate old password
 		   // Validate old password
 	    if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
@@ -104,7 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
 	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
 	    userDao.save(user);
 
-	    return "Password updated successfully";
+	    return new ApiResponse("Password updated successfully");
 	}
 	
 	//UPDATE USER DETAILS

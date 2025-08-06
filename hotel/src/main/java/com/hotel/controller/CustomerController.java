@@ -105,7 +105,7 @@ public class CustomerController {
 		}
 		
 		
-		//DELETE REIEW
+		//DELETE REVIEW
 		@DeleteMapping("/reviews/{reviewId}")
 		public ResponseEntity<?> deleteReview(@PathVariable("reviewId") Long reviewId){
 			return ResponseEntity.status(HttpStatus.OK)

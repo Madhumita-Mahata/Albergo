@@ -21,7 +21,7 @@ public interface CustomerService {
 	
 	UserRespDto loginUser(LoginReqDto loginDto);
 	
-	String changePassword(ChangePasswordDto dto);
+	ApiResponse changePassword(ChangePasswordDto dto);
 	
 	UserRespDto getUserById(Long id);
 	

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.dto.RoomReqDto;
 import com.hotel.entities.Room;
+import com.hotel.service.CustomerService;
 import com.hotel.service.ManagerService;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ import lombok.AllArgsConstructor;
 public class ManagerController {
 	
 	private final ManagerService managerService;
+	
 	
 	@PostMapping("/room")
 	public ResponseEntity<?> addRoom(@RequestBody RoomReqDto roomDto)
@@ -91,5 +93,20 @@ public class ManagerController {
 				.body(managerService.deleteRoom(roomNo));
 		
 	}
+	
+	//GET REVIEW BY USERID
+	@GetMapping("/{userId}/reviews")
+	public ResponseEntity<?> getReviewByUserId(@PathVariable("userId") Long userId){
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(managerService.getReviewById(userId));
+	}
+			
+	@GetMapping("/all/reviews")
+	public ResponseEntity<?> getAllReviews()
+	{
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(managerService.getAllReviews());
+	}
+		
 	
 }

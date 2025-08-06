@@ -2175,3 +2175,70 @@
 2025-08-06 03:27:30,274 [Worker-14: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
 2025-08-06 03:27:43,386 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@2a1e26d3{STOPPING}[12.0.16,sto=0]
 2025-08-06 03:27:43,396 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@61d33a51{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
+2025-08-06 11:00:19,710 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-08-06 11:02:56,107 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:02:56,152 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:02:56,165 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 11:04:46,815 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:04:46,823 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:04:46,831 [Worker-7: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 11:04:54,760 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:04:54,775 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:04:54,781 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 11:07:01,436 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-12.0.16; built: 2024-12-09T21:02:54.535Z; git: c3f88bafb4e393f23204dc14dc57b042e84debc7; jvm 21.0.6+7-LTS
+2025-08-06 11:07:01,543 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started oeje8n.ContextHandler$CoreContextHandler@2589de80{/help,/help,b=null,a=AVAILABLE,h=oeje8n.ContextHandler$CoreContextHandler$CoreToNestedHandler@48b6be85{STARTED}}
+2025-08-06 11:07:01,544 [Start Help Server] INFO  o.e.j.s.DefaultSessionIdManager - Session workerName=node0
+2025-08-06 11:07:01,592 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@7f65c442{HTTP/1.1, (http/1.1)}{127.0.0.1:53629}
+2025-08-06 11:07:01,607 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@186295bf{STARTING}[12.0.16,sto=0] @482371ms
+2025-08-06 11:07:43,996 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:07:44,068 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:07:44,074 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 11:08:00,949 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:08:00,966 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:08:00,977 [Worker-2: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 11:08:08,395 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 11:08:08,401 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 11:08:08,407 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 14:38:34,284 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@186295bf{STOPPING}[12.0.16,sto=0]
+2025-08-06 14:38:34,293 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@7f65c442{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
+2025-08-06 19:24:10,034 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-08-06 19:27:21,021 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:27:21,082 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:27:21,092 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:29:56,699 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:29:56,707 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:29:56,714 [Worker-6: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:30:05,735 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:30:05,743 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:30:05,752 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:30:23,196 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-12.0.16; built: 2024-12-09T21:02:54.535Z; git: c3f88bafb4e393f23204dc14dc57b042e84debc7; jvm 21.0.6+7-LTS
+2025-08-06 19:30:23,311 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started oeje8n.ContextHandler$CoreContextHandler@263c9e8{/help,/help,b=null,a=AVAILABLE,h=oeje8n.ContextHandler$CoreContextHandler$CoreToNestedHandler@59615771{STARTED}}
+2025-08-06 19:30:23,311 [Start Help Server] INFO  o.e.j.s.DefaultSessionIdManager - Session workerName=node0
+2025-08-06 19:30:23,348 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@22f2afbf{HTTP/1.1, (http/1.1)}{127.0.0.1:64414}
+2025-08-06 19:30:23,364 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@45605cbf{STARTING}[12.0.16,sto=0] @403635ms
+2025-08-06 19:30:29,633 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:30:29,641 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:30:29,649 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:31:52,057 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:31:52,066 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:31:52,074 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:41:02,869 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:41:02,876 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:41:02,883 [Worker-5: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:41:16,181 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:41:16,188 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:41:16,198 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:41:28,063 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:41:28,083 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:41:28,091 [Worker-13: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:47:05,614 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:47:05,620 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:47:05,627 [Worker-16: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:47:11,664 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:47:11,668 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:47:11,673 [Worker-17: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 19:48:12,031 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-08-06 19:48:12,058 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-08-06 19:48:12,062 [Worker-19: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory E:\FinalProject_Albergo\Albergo\hotel\src\test\resources
+2025-08-06 22:40:54,961 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@45605cbf{STOPPING}[12.0.16,sto=0]
+2025-08-06 22:40:54,966 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped ServerConnector@22f2afbf{HTTP/1.1, (http/1.1)}{127.0.0.1:0}

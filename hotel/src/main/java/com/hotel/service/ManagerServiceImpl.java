@@ -10,15 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hotel.custom_exception.ApiException;
 import com.hotel.custom_exception.ResourceNotFoundException;
+import com.hotel.dao.ReviewDao;
 import com.hotel.dao.RoomDao;
 import com.hotel.dao.UserDao;
 import com.hotel.dto.ApiResponse;
 import com.hotel.dto.ChangePasswordDto;
 import com.hotel.dto.LoginReqDto;
+import com.hotel.dto.ReviewRespDto;
 import com.hotel.dto.RoomReqDto;
 import com.hotel.dto.RoomRespDto;
 import com.hotel.dto.UserRespDto;
 import com.hotel.entities.Category;
+import com.hotel.entities.Review;
 import com.hotel.entities.Room;
 import com.hotel.entities.User;
 
@@ -28,11 +31,12 @@ import lombok.AllArgsConstructor;
 @Transactional
 @AllArgsConstructor
 public class ManagerServiceImpl implements ManagerService {
-
+	
 	private final ModelMapper modelMapper;
 	private final BCryptPasswordEncoder passwordEncoder;
 	private final RoomDao roomDao;
 	private final UserDao userDao;
+	private final ReviewDao reviewDao;
 	
 	@Override
 	public UserRespDto loginUser(LoginReqDto loginDto) {
@@ -120,5 +124,34 @@ public class ManagerServiceImpl implements ManagerService {
 		roomDao.delete(room);
 		return new ApiResponse("Room deleted");
 	}
+	
+	@Override
+	public List<ReviewRespDto> getReviewById(Long userId) {
+		User user = userDao.findById(userId)
+				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
+		List<Review> reviews = reviewDao.findByUser(user);
+		return reviews.stream().map(review -> {
+			ReviewRespDto dto = modelMapper.map(review, ReviewRespDto.class);
+			dto.setUserId(review.getUser().getUserId());
+			dto.setUserName(review.getUser().getFirstName());
+			
+			return dto;
+			
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ReviewRespDto> getAllReviews() {
+		List<Review> reviews = reviewDao.findAll();
+
+	    return reviews.stream().map(review -> {
+	        ReviewRespDto dto = modelMapper.map(review, ReviewRespDto.class);
+
+	        dto.setUserId(review.getUser().getUserId());
+	        dto.setUserName(review.getUser().getFirstName());
+	        return dto;
+	    }).collect(Collectors.toList());
+	}
+
 
 }
