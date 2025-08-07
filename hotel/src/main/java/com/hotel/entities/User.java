@@ -39,7 +39,7 @@ public class User {
 	@Column(name = "last_name", length = 20, nullable = false)
 	private String lastName;
 	
-	@Column(length = 30, unique = true, nullable = false)
+	@Column(length = 100, unique = true, nullable = false)
 	private String email;
 	
 	@Column(length = 200)

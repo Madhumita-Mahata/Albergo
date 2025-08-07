@@ -21,7 +21,7 @@ public class UserReqDto {
 	@NotBlank(message = "please enter email")
 	private String email;
 	
-	@Pattern(regexp="((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,20})",
+	@Pattern(regexp="((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,100})",
 			message = "Invalid password format !!!")
 	private String password;
 	
