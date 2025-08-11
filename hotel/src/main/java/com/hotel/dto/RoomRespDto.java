@@ -12,9 +12,11 @@ import lombok.ToString;
 @ToString
 public class RoomRespDto {
 
+	private Long roomId;
+	
 	private String roomNumber;
 	
-	private String occupacy;
+	private String occupancy;
 	
 	private Category category;
 	
@@ -22,4 +24,5 @@ public class RoomRespDto {
 	
 	private Status status ;
 	
+	private String imagePath;
 }

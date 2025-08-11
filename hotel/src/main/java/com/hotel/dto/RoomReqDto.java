@@ -1,8 +1,8 @@
 package com.hotel.dto;
 
-import com.hotel.entities.Status;
-
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,17 +12,18 @@ import lombok.ToString;
 @ToString
 public class RoomReqDto {
 
-	@NotBlank(message = "Please enter room number")
-	private String roomNumber;
-	
-	@NotBlank
-	private String occupacy;
+    @NotBlank(message = "Please enter room number")
+    private String roomNumber;
 
-	@NotBlank(message = "Enter the category of the room")
-	private String category;
-	
-	@NotBlank(message = "Enter the price of the room")
-	private double price;
+    @NotBlank(message = "Please enter occupacy")
+    private String occupancy;
 
+    @NotBlank(message = "Enter the category of the room")
+    private String category; // keep as String, convert later
 
+    @NotNull(message = "Enter the price of the room")
+    @Min(value = 1, message = "Price must be greater than 0")
+    private Double price; // use Double, not primitive double
+
+    private String imagePath;
 }

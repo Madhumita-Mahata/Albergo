@@ -10,6 +10,7 @@ import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.PaymentReqDto;
 import com.hotel.dto.ReviewReqDto;
 import com.hotel.dto.ReviewRespDto;
+import com.hotel.dto.RoomRespDto;
 import com.hotel.dto.UpdateUserDto;
 import com.hotel.dto.UserReqDto;
 import com.hotel.dto.UserRespDto;
@@ -53,5 +54,8 @@ public interface CustomerService {
 	
 	void updateCompletedBookingsAndRooms();
 	
+	List<RoomRespDto> getAllRooms();
+	
+	RoomRespDto getRoomById(Long id);
 }
 

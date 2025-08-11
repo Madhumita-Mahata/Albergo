@@ -43,11 +43,11 @@ public class ManagerController {
 				.ok(managerService.getAllRooms());
 	}
 	
-	@GetMapping("/rooms/id/{roomid}")
-	public ResponseEntity<?> getRoomById(@PathVariable("roomid") Long roomid)
+	@GetMapping("/rooms/id/{roomId}")
+	public ResponseEntity<?> getRoomById(@PathVariable("roomId") Long roomId)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(managerService.getRoomById(roomid));
+				.body(managerService.getRoomById(roomId));
 	}
 	
 	@GetMapping("/rooms/no/{no}")
@@ -64,11 +64,11 @@ public class ManagerController {
 				.body(managerService.getRoomByCategory(category));
 	}
 	
-	@PutMapping("/rooms/{roomid}")
-	public ResponseEntity<?> updateRoom(@PathVariable("roomid") Long roomid, @RequestBody Room room)
+	@PutMapping("/rooms/{roomId}")
+	public ResponseEntity<?> updateRoom(@PathVariable("roomId") Long roomId, @RequestBody Room room)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(managerService.updateRoom(roomid, room));
+				.body(managerService.updateRoom(roomId, room));
 	}
 	
 	@PutMapping("/rooms/no/{no}")
@@ -78,8 +78,8 @@ public class ManagerController {
 				.body(managerService.updateRoomByRoomNumber(no, room));
 	}
 	
-	@DeleteMapping("/rooms/{roomid}")
-	public ResponseEntity<?> deleteRoom(@PathVariable("roomid") Long roomid)
+	@DeleteMapping("/rooms/{roomId}")
+	public ResponseEntity<?> deleteRoom(@PathVariable("roomId") Long roomid)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(managerService.deleteRoom(roomid));

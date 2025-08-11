@@ -36,7 +36,7 @@ public class Room {
 	private String roomNumber;
 	
 	@Column(nullable = false)
-	private String occupacy;
+	private String occupancy;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -44,6 +44,9 @@ public class Room {
 	
 	@Column(nullable = false)
 	private double price;
+	
+	@Column(length = 255)
+	private String imagePath; 
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

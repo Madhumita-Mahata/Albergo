@@ -29,6 +29,7 @@ import com.hotel.dto.LoginReqDto;
 import com.hotel.dto.PaymentReqDto;
 import com.hotel.dto.ReviewReqDto;
 import com.hotel.dto.ReviewRespDto;
+import com.hotel.dto.RoomRespDto;
 import com.hotel.dto.UpdateUserDto;
 import com.hotel.dto.UserReqDto;
 import com.hotel.dto.UserRespDto;
@@ -231,8 +232,9 @@ public class CustomerServiceImpl implements CustomerService {
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setRoom(room);
-        BookingStatus status = BookingStatus.valueOf(bookDto.getBookingStatus().toUpperCase());
-        booking.setBookingStatus(status);
+//        BookingStatus status = BookingStatus.valueOf(bookDto.getBookingStatus().toUpperCase());
+//        booking.setBookingStatus(status);
+        booking.setBookingStatus(bookDto.getBookingStatus() != null ? BookingStatus.valueOf(bookDto.getBookingStatus()) : BookingStatus.CONFIRMED);
        // booking.setBookingDate(LocalDate.now());
         booking.setCheckInDate(bookDto.getCheckInDate());
         booking.setCheckOutDate(bookDto.getCheckOutDate());
@@ -434,5 +436,21 @@ public class CustomerServiceImpl implements CustomerService {
 	    }
 
 	    return dto;
+	}
+	
+	@Override
+	public List<RoomRespDto> getAllRooms() {
+		return roomDao.findAll()
+				.stream()
+				.map(room->modelMapper.map(room, RoomRespDto.class))
+				.collect(Collectors.toList());
+	}
+
+	
+	@Override
+	public RoomRespDto getRoomById(Long id) {
+		Room room = roomDao.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("Invalid room no"));
+		return modelMapper.map(room, RoomRespDto.class);
 	}
 }

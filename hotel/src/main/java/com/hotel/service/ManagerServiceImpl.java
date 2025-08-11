@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ import com.hotel.dto.UserRespDto;
 import com.hotel.entities.Category;
 import com.hotel.entities.Review;
 import com.hotel.entities.Room;
+import com.hotel.entities.Status;
 import com.hotel.entities.User;
 
 import lombok.AllArgsConstructor;
@@ -48,14 +50,37 @@ public class ManagerServiceImpl implements ManagerService {
 		return modelMapper.map(user, UserRespDto.class);
 	}
 	
+//	@Override
+//	public RoomRespDto addRooms(RoomReqDto roomDto) {
+//		if(roomDao.existsByRoomNumber(roomDto.getRoomNumber()))
+//			throw new ApiException("Duplicate room");
+//		Room room = modelMapper.map(roomDto, Room.class);
+//		Category category = Category.valueOf(roomDto.getCategory().toUpperCase());
+//		room.setCategory(category);
+//		return modelMapper.map(roomDao.save(room), RoomRespDto.class);
+//	}
+	
 	@Override
 	public RoomRespDto addRooms(RoomReqDto roomDto) {
-		if(roomDao.existsByRoomNumber(roomDto.getRoomNumber()))
-			throw new ApiException("Duplicate room");
-		Room room = modelMapper.map(roomDto, Room.class);
-		Category category = Category.valueOf(roomDto.getCategory().toUpperCase());
-		room.setCategory(category);
-		return modelMapper.map(roomDao.save(room), RoomRespDto.class);
+	    if (roomDao.existsByRoomNumber(roomDto.getRoomNumber()))
+	        throw new ApiException("Duplicate room");
+
+	    Room room = new Room();
+	    room.setRoomNumber(roomDto.getRoomNumber());
+	    room.setOccupancy(roomDto.getOccupancy());
+
+	    try {
+	        Category category = Category.valueOf(roomDto.getCategory().toUpperCase());
+	        room.setCategory(category);
+	    } catch (IllegalArgumentException e) {
+	        throw new ApiException("Invalid category. Allowed values: " + Arrays.toString(Category.values()));
+	    }
+
+	    room.setPrice(roomDto.getPrice());
+	    room.setImagePath(roomDto.getImagePath());
+	    room.setStatus(Status.AVAILABLE);
+
+	    return modelMapper.map(roomDao.save(room), RoomRespDto.class);
 	}
 
 	@Override

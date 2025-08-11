@@ -158,5 +158,18 @@ public class CustomerController {
 		    return ResponseEntity.ok("Bookings updated");
 		}
 
+		@GetMapping("/rooms")
+		public ResponseEntity<?> getAllRooms()
+		{
+			return ResponseEntity
+					.ok(userService.getAllRooms());
+		}
+		
+		@GetMapping("/rooms/id/{roomId}")
+		public ResponseEntity<?> getRoomById(@PathVariable("roomId") Long roomId)
+		{
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(userService.getRoomById(roomId));
+		}
 		
 }

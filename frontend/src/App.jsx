@@ -11,7 +11,7 @@ import ManagerDashboard from './pages/manager/ManagerDashboard';
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 // import AdminLayout from './components/AdminLatout';
 import './App.css';
-import PrivateRoute from './routes/PrivateRoute';
+// import PrivateRoute from './routes/PrivateRoute';
 import AdminLayout from './components/AdminLayout';
 
 function App() {

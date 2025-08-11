@@ -53,38 +53,56 @@ const RoleLayout = ({
             <form onSubmit={onSubmit} className="space-y-4">
               {selectedAction.inputFields.map((field) => (
                 <div key={field.name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {field.placeholder}
-                  </label>
-                  {field.type === "select" ? (
-                    <select
+                  {field.type === "hidden" ? (
+                    <input
+                      id={field.name}
+                      name={field.name}
+                      type="hidden"
                       value={formData[field.name] || ""}
                       onChange={(e) => onInputChange(field.name, e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="">{field.placeholder}</option>
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : field.type === "textarea" ? (
-                    <textarea
-                      value={formData[field.name] || ""}
-                      onChange={(e) => onInputChange(field.name, e.target.value)}
-                      placeholder={field.placeholder}
-                      rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   ) : (
-                    <input
-                      type={field.type}
-                      value={formData[field.name] || ""}
-                      onChange={(e) => onInputChange(field.name, e.target.value)}
-                      placeholder={field.placeholder}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    <>
+                      <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 mb-2">
+                        {field.placeholder}
+                      </label>
+                      {field.type === "select" ? (
+                        <select
+                          id={field.name}
+                          name={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={(e) => onInputChange(field.name, e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                          <option value="">{field.placeholder}</option>
+                          {field.options.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      ) : field.type === "textarea" ? (
+                        <textarea
+                          id={field.name}
+                          name={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={(e) => onInputChange(field.name, e.target.value)}
+                          placeholder={field.placeholder}
+                          rows={4}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      ) : (
+                        <input
+                          id={field.name}
+                          name={field.name}
+                          type={field.type}
+                          value={formData[field.name] || ""}
+                          onChange={(e) => onInputChange(field.name, e.target.value)}
+                          placeholder={field.placeholder}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               ))}
@@ -124,7 +142,7 @@ const RoleLayout = ({
         )}
 
         {/* Results Display */}
-        {results && results.length > 0 && (
+        {results && (Array.isArray(results) ? results.length > 0 : true) && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h3 className="text-xl font-semibold mb-4">Results</h3>
             {renderResults ? renderResults(results) : (
@@ -148,7 +166,7 @@ const RoleLayout = ({
                       {results.map((item, index) => (
                         <tr key={index} className="hover:bg-gray-50">
                           {Object.values(item).map((value, i) => (
-                            <td key={i} className="border border-gray-300 px-4 py-2">
+                            <td key={`${index}-${i}`} className="border border-gray-300 px-4 py-2">
                               {typeof value === 'object' && value !== null 
                                 ? JSON.stringify(value) 
                                 : String(value || '')
