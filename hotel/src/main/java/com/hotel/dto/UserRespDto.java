@@ -13,6 +13,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class UserRespDto {
+	private Long userId;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -21,5 +22,4 @@ public class UserRespDto {
 	private String gender;
 	private String idCard;
 	private Role role;
-
 }

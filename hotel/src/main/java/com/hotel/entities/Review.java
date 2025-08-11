@@ -16,21 +16,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "feedbacks")
+@Table(name = "reviews")
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(callSuper = true, exclude = "user")
-@EqualsAndHashCode(of = "feedbackId", callSuper = false)
+@EqualsAndHashCode(of = "reviewId", callSuper = false)
 public class Review {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long feedbackId;
-	
-	private String comments;
+	private Long reviewId;
 	
 	private int rating;
+	
+	private String comment;
 	
 	private LocalDate date = LocalDate.now();
 	

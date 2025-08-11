@@ -1,28 +1,49 @@
 package com.hotel.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hotel.controller.ChangePasswordDTO;
-import com.hotel.controller.LoginReqDTO;
 import com.hotel.custom_exception.ApiException;
 import com.hotel.custom_exception.ResourceNotFoundException;
 import com.hotel.dao.BookingDao;
+import com.hotel.dao.PaymentDao;
+import com.hotel.dao.ReviewDao;
+import com.hotel.dao.RoomDao;
 import com.hotel.dao.UserDao;
+import com.hotel.dto.AddBookingRespDto;
 import com.hotel.dto.ApiResponse;
+import com.hotel.dto.BookingReqDto;
+import com.hotel.dto.BookingRespDto;
+import com.hotel.dto.ChangePasswordDto;
+import com.hotel.dto.LoginReqDto;
+import com.hotel.dto.PaymentReqDto;
+import com.hotel.dto.ReviewReqDto;
+import com.hotel.dto.ReviewRespDto;
+import com.hotel.dto.RoomRespDto;
+import com.hotel.dto.UpdateUserDto;
 import com.hotel.dto.UserReqDto;
 import com.hotel.dto.UserRespDto;
+import com.hotel.entities.Booking;
+import com.hotel.entities.BookingStatus;
+import com.hotel.entities.Method;
+import com.hotel.entities.Payment;
+import com.hotel.entities.PaymentStatus;
+import com.hotel.entities.Review;
 import com.hotel.entities.Role;
+import com.hotel.entities.Room;
+import com.hotel.entities.Status;
 import com.hotel.entities.User;
 
-
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 
@@ -31,15 +52,15 @@ import lombok.AllArgsConstructor;
 @Service
 @Transactional
 @AllArgsConstructor
-
-
-public class UserServiceImpl implements UserService {
+public class CustomerServiceImpl implements CustomerService {
 	
 	private final BCryptPasswordEncoder passwordEncoder;
 	private final UserDao userDao;
 	private final ModelMapper modelMapper;
 	private final ReviewDao reviewDao;
 	private final BookingDao bookingDao;
+	private final RoomDao roomDao;
+	private final PaymentDao paymentDao;
 	
 	
 	//---------USER-----------
@@ -59,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
 	//USER SIGNIN
 	@Override
-	public UserRespDto loginUser(LoginReqDTO loginDto) {
+	public UserRespDto loginUser(LoginReqDto loginDto) {
 		User user = userDao.findByEmail(loginDto.getEmail())
 				.orElseThrow(()->new ApiException("Invalid email or password"));
 		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
@@ -70,10 +91,11 @@ public class UserServiceImpl implements UserService {
 
 	//CHANGE PASSWORD
 	@Override
-	public String changePassword(ChangePasswordDTO dto) {
-		User user = userDao.findByEmail(dto.getEmail())
-				 .orElseThrow(() -> new ApiException("User not found"));
+	public ApiResponse changePassword(ChangePasswordDto dto) {
 		
+		User user = userDao.findByEmail(dto.getEmail())
+				.orElseThrow(()->new ApiException("User not found"));
+			
 		//validate old password
 		   // Validate old password
 	    if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
@@ -84,14 +106,14 @@ public class UserServiceImpl implements UserService {
 	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
 	    userDao.save(user);
 
-	    return "Password updated successfully";
+	    return new ApiResponse("Password updated successfully");
 	}
 	
 	//UPDATE USER DETAILS
 	@Override
 	public UserRespDto getUserById(Long id) {
 
-		return userDao.findByUserId(id)
+		return userDao.findById(id)
 				.map(user->modelMapper.map(user, UserRespDto.class))
 				.orElseThrow(()->new ApiException("User Not Found!"));
 	}
@@ -100,8 +122,8 @@ public class UserServiceImpl implements UserService {
 	//--------REVIEW-------
 	//G
 	@Override
-	public UserRespDto updateUserDetails(Long id, UpdateUserDTO dto) {
-		User user = userDao.findByUserId(id)
+	public UserRespDto updateUserDetails(Long id, UpdateUserDto dto) {
+		User user = userDao.findById(id)
 				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		modelMapper.map(dto, user);
 		
@@ -110,15 +132,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ApiResponse deleteUser(Long id) {
-		User user = userDao.findByUserId(id)
+		User user = userDao.findById(id)
 				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		userDao.delete(user);
 		return new ApiResponse("User Deleted Successfully!");
 	}
 
 	@Override
-	public ReviewRespDTO giveReview(ReviewReqDTO dto, Long userId) {
-		User user = userDao.findByUserId(userId)
+	public ReviewRespDto giveReview(ReviewReqDto dto, Long userId) {
+		User user = userDao.findById(userId)
 				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		if(reviewDao.existsByUser(user)) {
 			throw new ApiException("You have already reviewed this hostel");
@@ -127,13 +149,13 @@ public class UserServiceImpl implements UserService {
 		Review review = modelMapper.map(dto, Review.class);
 		review.setUser(user);
 		
-		return modelMapper.map(reviewDao.save(review), ReviewRespDTO.class);
+		return modelMapper.map(reviewDao.save(review), ReviewRespDto.class);
 	}
 
 	//UPDATE REVIEW
 	@Override
-	public ReviewRespDTO updateReview(Long reviewId, ReviewReqDTO dto) {
-	    Review review = reviewDao.findByReviewId(reviewId)
+	public ReviewRespDto updateReview(Long reviewId, ReviewReqDto dto) {
+	    Review review = reviewDao.findById(reviewId)
 	        .orElseThrow(() -> new ResourceNotFoundException("No Review Found!"));
 
 	    review.setRating(dto.getRating());
@@ -141,20 +163,20 @@ public class UserServiceImpl implements UserService {
 
 	    Review updated = reviewDao.save(review);
 
-	    ReviewRespDTO res = modelMapper.map(updated, ReviewRespDTO.class);
+	    ReviewRespDto res = modelMapper.map(updated, ReviewRespDto.class);
 	    res.setUserId(updated.getUser().getUserId());
 	    return res;
 	}
 
 	@Override
-	public List<ReviewRespDTO> getReviewById(Long reviewId) {
-		User user = userDao.findByUserId(userId)
+	public List<ReviewRespDto> getReviewById(Long userId) {
+		User user = userDao.findById(userId)
 				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		List<Review> reviews = reviewDao.findByUser(user);
 		return reviews.stream().map(review -> {
-			ReviewRespDTO dto = modelMapper.map(review, ReviewRespDTO.class);
+			ReviewRespDto dto = modelMapper.map(review, ReviewRespDto.class);
 			dto.setUserId(review.getUser().getUserId());
-			dto.setUserName(review.getUser().getName());
+			dto.setUserName(review.getUser().getFirstName());
 			
 			return dto;
 			
@@ -162,14 +184,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<ReviewRespDTO> getAllReviews() {
+	public List<ReviewRespDto> getAllReviews() {
 		 List<Review> reviews = reviewDao.findAll();
 
 		    return reviews.stream().map(review -> {
-		        ReviewRespDTO dto = modelMapper.map(review, ReviewRespDTO.class);
+		        ReviewRespDto dto = modelMapper.map(review, ReviewRespDto.class);
 
 		        dto.setUserId(review.getUser().getUserId());
-		        dto.setUserName(review.getUser().getName());
+		        dto.setUserName(review.getUser().getFirstName());
 		        return dto;
 		    }).collect(Collectors.toList());
 	}
@@ -187,99 +209,96 @@ public class UserServiceImpl implements UserService {
 	
 	//CREATE BOOKING
 	@Override
-	public AddBookingResDto createBooking(BookingReqDto dto) {
-		User user = userDao.findByUserId(dto.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-				.orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
-		Room room = roomDao.findById(dto.getRoomId())
-				.orElseThrow(() -> new ResourceNotFoundException("Room not found"));
-		
-		LocalDate today = LocalDate.now();
+	public AddBookingRespDto createBooking(BookingReqDto bookDto) {
+		User user = userDao.findById(bookDto.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Room room = roomDao.findById(bookDto.getRoomId())
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+        room.setStatus(Status.NOT_AVAILABLE);
+
         
-        if (dto.getCheckInDate().isBefore(today)) {
+        LocalDate today = LocalDate.now();
+        
+        if (bookDto.getCheckInDate().isBefore(today)) {
             throw new ApiException("Check-in date cannot be in the past");
         }
 
-        if (!dto.getCheckOutDate().isAfter(dto.getCheckInDate())) {
+        if (!bookDto.getCheckOutDate().isAfter(bookDto.getCheckInDate())) {
             throw new ApiException("Check-out date must be after check-in date");
         }
-     // Check room occupancy limit
-        int activeBookings = bookingDao.countActiveBookingsForRoom(
-        	    room,
-        	    dto.getCheckInDate(),
-        	    dto.getCheckOutDate(),
-        	    BookingStatus.BOOKED // or CONFIRMED if that's your "active"
-        	);
-        
-        if (activeBookings >= room.getCapacity()) {
-            throw new ApiException("Room has reached its maximum occupancy for the selected dates");
-        }
+
         
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setRoom(room);
-        booking.setStatus(dto.getStatus() != null ? dto.getStatus() : BookingStatus.CONFIRMED);
-        booking.setBookingDate(LocalDate.now());
-        booking.setCheckInDate(dto.getCheckInDate());
-        booking.setCheckOutDate(dto.getCheckOutDate());
+//        BookingStatus status = BookingStatus.valueOf(bookDto.getBookingStatus().toUpperCase());
+//        booking.setBookingStatus(status);
+        booking.setBookingStatus(bookDto.getBookingStatus() != null ? BookingStatus.valueOf(bookDto.getBookingStatus()) : BookingStatus.CONFIRMED);
+       // booking.setBookingDate(LocalDate.now());
+        booking.setCheckInDate(bookDto.getCheckInDate());
+        booking.setCheckOutDate(bookDto.getCheckOutDate());
 
         Booking savedBooking = bookingDao.save(booking);
 
-        int current = bookingDao.countCurrentOccupants(room, LocalDate.now(), BookingStatus.BOOKED);
-        room.setCurrentOccupancy(current);
-
-        //roomDao.save(room);
+        roomDao.save(room);
         
         roomDao.saveAndFlush(room);
         
-// Map to response DTO
+        // Map to response DTO
         
-        AddBookingResDTO respDto = modelMapper.map(savedBooking, AddBookingResDTO.class);
+        AddBookingRespDto respDto = modelMapper.map(savedBooking, AddBookingRespDto.class);
         respDto.setRoomId(savedBooking.getRoom().getRoomId());
+        respDto.setCategory(savedBooking.getRoom().getCategory());
         respDto.setUserId(savedBooking.getUser().getUserId());
-        respDto.setUserName(savedBooking.getUser().getName());
-        
-        
-		return respDto;
+        respDto.setUserName(savedBooking.getUser().getFirstName());
+       
+        return respDto;
 	}
 
 
 	 //MAKE PAYMENT FOR EXISTING BOOKING
    public BookingRespDto makePayment(Long bookingId, PaymentReqDto paymentDto) {
-       Booking booking = bookingDao.findById(bookingId)
+	   Booking booking = bookingDao.findById(bookingId)
                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
        if(booking.getPayment() != null) {
-           throw new ApiException("Payment already exists for this booking");}
-      
-       //CHECK PRICE
-       //USER WILL PAY FOR STAY
-       Room room = booking.getRoom();
-       double expectedAmount = room.getPricePerDay();
+           throw new ApiException("Payment already exists for this booking");
+       }
        
-       if(paymentDTO.getAmount()!=expectedAmount) {
+       //CHECK PRICE 
+       Room room = booking.getRoom();
+       double expectedAmount = room.getPrice();
+       
+       if(paymentDto.getAmount()!=expectedAmount) {
        	throw new ApiException("Invalid payment amount. Expected: " + expectedAmount);
        }
        
        Payment payment = new Payment();
-       payment.setAmount(paymentDTO.getAmount());
+       payment.setAmount(paymentDto.getAmount());
        payment.setPaymentDate(LocalDateTime.now());
-       payment.setPaymentStatus(paymentDTO.getPaymentStatus() != null ? paymentDTO.getPaymentStatus() : PaymentStatus.SUCCESS);
+       Method method = Method.valueOf(paymentDto.getMethod().toUpperCase());
+       payment.setMethod(method);
+       payment.setPaymentStatus(paymentDto.getPaymentStatus() != null ? paymentDto.getPaymentStatus() : PaymentStatus.SUCCESS);
        payment.setBooking(booking);
+       
+       
+       
+      // Payment payment = modelMapper.map(paymentDto, Payment.class);
 
        Payment savedPayment = paymentDao.save(payment);
 
        booking.setPayment(savedPayment);
+       booking.setBookingStatus(BookingStatus.BOOKED);
        bookingDao.save(booking);
 
-      
-   //MAP to BookingRespDTO including payment info
        //Map to BookingRespDTO including payment info
-       BookingRespDTO respDto = modelMapper.map(booking, BookingRespDTO.class);
+       BookingRespDto respDto = modelMapper.map(booking, BookingRespDto.class);
        respDto.setRoomId(booking.getRoom().getRoomId());
        respDto.setUserId(booking.getUser().getUserId());
-       respDto.setUserName(booking.getUser().getName());
-       
-     //Payment info
+       respDto.setUserName(booking.getUser().getFirstName());
+
+       //Payment info
        respDto.setPaymentId(savedPayment.getPaymentId());
        respDto.setAmount(savedPayment.getAmount());
        respDto.setPaymentStatus(savedPayment.getPaymentStatus());
@@ -288,39 +307,46 @@ public class UserServiceImpl implements UserService {
        return respDto;
 	}
    
-   //UPDATE COMPLETE BOOKING
    
+   
+   //UPDATE COMPLETE BOOKING
    @Scheduled(cron = "0 0 1 * * ?") // Runs daily at 1 AM
-   public void updateCompletedBookings() {
+   public void updateCompletedBookingsAndRooms() {
        LocalDate today = LocalDate.now();
 
-       // Step 1: Mark expired bookings as COMPLETED
-       List<Booking> bookingsToComplete = bookingDao.findBookingsToMarkCompleted(today);
-       for (Booking booking : bookingsToComplete) {
-           booking.setStatus(BookingStatus.COMPLETED);
-           bookingDao.save(booking);
-       }
+       // Step 1: Find bookings whose check-out date is before today and not completed
+       List<Booking> expiredBookings = bookingDao
+               .findByBookingStatusNotAndCheckOutDateBefore(BookingStatus.COMPLETED, today);
 
-       // Step 2: For all affected rooms, update their currentOccupancy based on today
-       Set<Room> affectedRooms = bookingsToComplete.stream()
-           .map(booking -> booking.getRoom())
-           .collect(Collectors.toSet());
+       // Step 2: Update booking status and collect room IDs
+       Set<Long> roomIdsToUpdate = new HashSet<>();
 
-       for (Room room : affectedRooms) {
-           int currentOccupants = bookingDao.countCurrentOccupants(room, today, BookingStatus.BOOKED);
-           room.setCurrentOccupancy(currentOccupants);
-           if (currentOccupants == 0) {
-               room.setStatus(RoomStatus.AVAILABLE);
-           } else {
-               room.setStatus(RoomStatus.OCCUPIED);
+       for (Booking booking : expiredBookings) {
+           booking.setBookingStatus(BookingStatus.COMPLETED);
+           if (booking.getRoom() != null) {
+               roomIdsToUpdate.add(booking.getRoom().getRoomId());
            }
-           roomDao.save(room);
        }
+
+       // Save updated bookings in batch
+       bookingDao.saveAll(expiredBookings);
+
+       // Step 3: Update room statuses to AVAILABLE
+       if (!roomIdsToUpdate.isEmpty()) {
+           List<Room> rooms = roomDao.findAllById(roomIdsToUpdate);
+
+           for (Room room : rooms) {
+               room.setStatus(Status.AVAILABLE);
+           }
+
+           roomDao.saveAll(rooms);
+       }
+   }
 
        //GET ALL BOOKINGS BY USERID
 	@Override
 	public List<BookingRespDto> getBookingsByUserId(Long userId) {
-		User user = userDao.findByUserId(userId)
+		User user = userDao.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 		
 		List<Booking> bookings = bookingDao.findByUserUserId(userId);
@@ -330,19 +356,19 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return bookings.stream().map(booking -> {
-			BookingRespDTO dto = modelMapper.map(booking, BookingRespDTO.class);
+			BookingRespDto dto = modelMapper.map(booking, BookingRespDto.class);
 			
-		//SET ROOM AND PGPROPERTY
+			//SET ROOM AND PGPROPERTY
 	        if (booking.getRoom() != null) {
 	            dto.setRoomId(booking.getRoom().getRoomId());
-	     }
-		
-	      //SET USER
+	        }
+	        
+	     //SET USER
 	        if (booking.getUser() != null) {
 	            dto.setUserId(booking.getUser().getUserId());
-	            dto.setUserName(booking.getUser().getName());
+	            dto.setUserName(booking.getUser().getFirstName());
 	        }
-		}
+
 	        //SET PAYMENT
 	        if (booking.getPayment() != null) {
 	            dto.setPaymentId(booking.getPayment().getPaymentId());
@@ -354,51 +380,54 @@ public class UserServiceImpl implements UserService {
 	    }).collect(Collectors.toList());
 	}
 
-	@Override
-	public BookingRespDto cancelBookingsByUserId(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	
 	//CANCEL BOOKING USING USERID AND BOOKINGID
 	@Override
+	public ApiResponse cancelBooking(Long userId, Long bookingId) {
+		// Step 1: Fetch booking by bookingId
+        Booking booking = bookingDao.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
+
+        // Step 2: Check if booking belongs to user
+        if (!booking.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Booking does not belong to the specified user");
+        }
+
+        // Step 3: Set booking status to CANCELLED
+        booking.setBookingStatus(BookingStatus.CANCELLED);
+        bookingDao.save(booking);
+
+        // Step 4: Set room status to AVAILABLE
+        Room room = booking.getRoom();
+        if (room != null) {
+            room.setStatus(com.hotel.entities.Status.AVAILABLE);
+            roomDao.save(room);
+        }
+
+        return new ApiResponse("Booking with ID " + bookingId + " has been cancelled successfully.");
+    }
+	
+	
+	@Override
 	public BookingRespDto getBookingById(Long bookingId) {
-		User user = userDao.findByUserId(userId)
-	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-	 
-	 Booking booking = bookingDao.findById(bookingId)
+		Booking booking = bookingDao.findById(bookingId)
 	            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-	    
-	  if(!booking.getUser().getUserId().equals(userId)) {
-		  throw new ResourceNotFoundException("Booking does not belong to this user");
-	  }
-	  
-	  if (booking.getStatus() == BookingStatus.CANCELLED) {
-	        throw new ApiException("Booking is already cancelled");
-	   }
-	  
-	  booking.setStatus(BookingStatus.CANCELLED);
-	  
-	  Room room = booking.getRoom();
-	  if(room !=null) {
-		  room.setStatus(RoomStatus.AVAILABLE);	
-		  if(room.getCurrentOccupancy()>0) {
-			  room.setCurrentOccupancy(room.getCurrentOccupancy()-1);
-		  }
-		  roomDao.save(room);
-	 }
-	    
-	  bookingDao.save(booking);
-	  
-	  
-	  BookingRespDTO dto = modelMapper.map(booking, BookingRespDTO.class);
-	    dto.setUserId(user.getUserId());
-	    dto.setUserName(user.getName());
+	    BookingRespDto dto = modelMapper.map(booking, BookingRespDto.class);
+
+	    // Set Room and PGProperty
 	    if (booking.getRoom() != null) {
 	        dto.setRoomId(booking.getRoom().getRoomId());
 	    }
+
+	    // Set User
+	    if (booking.getUser() != null) {
+	        dto.setUserId(booking.getUser().getUserId());
+	        dto.setUserName(booking.getUser().getFirstName());
+	    }
+
+	    // Set Payment
 	    if (booking.getPayment() != null) {
 	        dto.setPaymentId(booking.getPayment().getPaymentId());
 	        dto.setAmount(booking.getPayment().getAmount());
@@ -407,53 +436,21 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    return dto;
-	    
+	}
+	
+	@Override
+	public List<RoomRespDto> getAllRooms() {
+		return roomDao.findAll()
+				.stream()
+				.map(room->modelMapper.map(room, RoomRespDto.class))
+				.collect(Collectors.toList());
 	}
 
 	
-
 	@Override
-	public RequestedServiceResponseDto requestService(@Valid RequestServiceDTO dto) {
-		User user = userDao.findById(dto.getUserId())
-	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-	    HotelService service = serviceDao.findById(dto.getServiceId())
-	            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-		
-	    Room room = roomDao.findById(dto.getRoomId())
-	            .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
-
-	 // Check if user has a valid booking for the given room
-	    Optional<Booking> bookingOpt = bookingDao.findByUserUserIdAndRoomRoomIdAndStatusNot(
-	        user.getUserId(), room.getRoomId(), BookingStatus.CANCELLED);
-
-	    if (bookingOpt.isEmpty()) {
-	        throw new ApiException("User does not have a valid booking for this room");
-	    }
-	    UserServiceRequest req = modelMapper.map(dto, UserServiceRequest.class);
-		  req.setUser(user);
-		  req.setService(service);
-		  req.setStatus(ServiceStatus.REQUESTED);
-		  req.setRequestDate(LocalDate.now());
-	    
-		  UserServiceRequest saved  = userServiceRequestDao.save(req);
-		  
-		  RequestedServiceResponseDTO respDto = modelMapper.map(saved, RequestedServiceResponseDTO.class);
-		
-		  respDto.setUserId(saved.getUser().getUserId());
-		  respDto.setUserName(saved.getUser().getName());
-		  
-		  respDto.setServiceId(saved.getService().getServiceId());
-		  respDto.setServiceName(saved.getService().getName());
-		  respDto.setServiceDescription(saved.getService().getDescription());
-		  respDto.setServicePrice(saved.getService().getPrice());
-		  
-		  respDto.setRoomId(room.getRoomId());
-		  
-		  return respDto;
-		}
-	    
-		
+	public RoomRespDto getRoomById(Long id) {
+		Room room = roomDao.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("Invalid room no"));
+		return modelMapper.map(room, RoomRespDto.class);
 	}
-
 }

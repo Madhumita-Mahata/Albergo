@@ -1,8 +1,11 @@
 package com.hotel.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,24 +14,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hotel.dto.BookingReqDto;
+import com.hotel.dto.BookingRespDto;
+import com.hotel.dto.ChangePasswordDto;
+import com.hotel.dto.LoginReqDto;
+import com.hotel.dto.PaymentReqDto;
+import com.hotel.dto.ReviewReqDto;
+import com.hotel.dto.UpdateUserDto;
 import com.hotel.dto.UserReqDto;
-import com.hotel.service.UserService;
+import com.hotel.service.CustomerService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/customer")
 @AllArgsConstructor
 @Validated
-
-public class UserController {
+public class CustomerController {
 	
-	private final UserService userService;
+	private final CustomerService userService;
 	
 	//USER REGISTERATION
 	@PostMapping("/register")
-	public ResponseEntity<?> userRregisteration(@RequestBody @Valid UserReqDto dto){
+	public ResponseEntity<?> userRegisteration(@RequestBody @Valid UserReqDto dto){
 		
 			return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(dto));
 		
@@ -36,26 +45,26 @@ public class UserController {
 	
 	//USER LOGIN
 	@PostMapping("/login")
-	public ResponseEntity<?> loginUser(@RequestBody LoginReqDTO dto) {
+	public ResponseEntity<?> loginUser(@RequestBody LoginReqDto dto) {
 		return ResponseEntity.ok(userService.loginUser(dto));
 	}
 	
 	//CHANGE PASSWORD
 		@PutMapping("/changePassword")
-		public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO dto){
+		public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto dto){
 			return ResponseEntity.ok(userService.changePassword(dto));
 		}
 		
 		//GET USER BY ID
 		@GetMapping("/{userId}")
-		public ResponseEntity<?> getUserById(@PathVariable Long userId){
+		public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.getUserById(userId));
 		}
 		
 		//UPDATE USER
 		@PutMapping("/{userId}")
-		public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDTO dto){
+		public ResponseEntity<?> updateUser(@PathVariable("userId") Long userId, @RequestBody UpdateUserDto dto){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.updateUserDetails(userId,dto));
 		}
@@ -63,7 +72,7 @@ public class UserController {
 		
 		//DELETE USER
 		@DeleteMapping("/{id}")
-		public ResponseEntity<?> deleteUser(@PathVariable Long id){
+		public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.deleteUser(id));
 		}
@@ -72,8 +81,8 @@ public class UserController {
 		
 		//ADD REVIEW
 		@PostMapping("/reviews/{userId}")
-		public ResponseEntity<?> giveReview(@RequestBody @Valid ReviewReqDTO dto, 
-				@PathVariable Long pgId, @PathVariable Long userId){
+		public ResponseEntity<?> giveReview(@RequestBody @Valid ReviewReqDto dto, 
+				@PathVariable("userId") Long userId){
 				return ResponseEntity.status(HttpStatus.CREATED)
 						.body(userService.giveReview(dto, userId));
 			
@@ -81,8 +90,8 @@ public class UserController {
 		
 		//UPDATE
 		@PutMapping("/reviews/{reviewId}")
-		public ResponseEntity<?> updateReview(@PathVariable Long reviewId, 
-				@RequestBody ReviewReqDTO dto){
+		public ResponseEntity<?> updateReview(@PathVariable("reviewId") Long reviewId, 
+				@RequestBody ReviewReqDto dto){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.updateReview(reviewId,dto));
 		}
@@ -90,15 +99,15 @@ public class UserController {
 		
 		//GET REVIEW BY USERID
 		@GetMapping("/{userId}/reviews")
-		public ResponseEntity<?> getReviewByUserId(@PathVariable Long userId){
+		public ResponseEntity<?> getReviewByUserId(@PathVariable("userId") Long userId){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.getReviewById(userId));
 		}
 		
 		
-		//DELETE REIEW
+		//DELETE REVIEW
 		@DeleteMapping("/reviews/{reviewId}")
-		public ResponseEntity<?> deleteReview(@PathVariable Long reviewId){
+		public ResponseEntity<?> deleteReview(@PathVariable("reviewId") Long reviewId){
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(userService.deleteReview(reviewId));
 		}
@@ -109,56 +118,58 @@ public class UserController {
 		
 		//MAKE BOOKING
 		@PostMapping("/bookings")
-		public ResponseEntity<?> makeBooking(@Valid @RequestBody BookingReqDTO dto){
+		public ResponseEntity<?> makeBooking(@Valid @RequestBody BookingReqDto dto){
 			return ResponseEntity.ok(userService.createBooking(dto));
 		}
 		
 		//MAKE PAYMENT
 		@PostMapping("/{bookingId}/payment")
 	    public ResponseEntity<?> makePayment(
-	            @PathVariable Long bookingId,
-	            @Valid @RequestBody PaymentReqDTO paymentDTO) {
-	        BookingRespDTO resp = userService.makePayment(bookingId, paymentDTO);
+	            @PathVariable("bookingId") Long bookingId,
+	            @Valid @RequestBody PaymentReqDto paymentDto) {
+	        BookingRespDto resp = userService.makePayment(bookingId, paymentDto);
 	        return ResponseEntity.ok(resp);
 	    }
 		
 		//GET ALL BOOKINGS BY USERID
 		@GetMapping("/bookings/users/{userId}")
-	    public ResponseEntity<List<BookingRespDTO>> getBookingsByUserId(@PathVariable Long userId) {
-	        List<BookingRespDTO> resp = userService.getBookingsByUserId(userId);
+	    public ResponseEntity<List<BookingRespDto>> getBookingsByUserId(@PathVariable("userId") Long userId) {
+	        List<BookingRespDto> resp = userService.getBookingsByUserId(userId);
 	        return ResponseEntity.ok(resp);
 	    }
 		
 		//GET BOOKINGS BY BOOKINGID
 			@GetMapping("/bookings/{bookingId}")
-		    public ResponseEntity<?> getBookingsByBookingId(@PathVariable Long bookingId) {
+		    public ResponseEntity<?> getBookingsByBookingId(@PathVariable("bookingId") Long bookingId) {
 		        return ResponseEntity.status(HttpStatus.OK)
 		        		.body(userService.getBookingById(bookingId));
 		    }
 
 		//DELETE BY USERID
 		@PutMapping("/bookings/cancel/{userId}/{bookingId}")
-		public ResponseEntity<?> cancelBookingsByUserId(@PathVariable Long userId, @PathVariable Long bookingId) {
+		public ResponseEntity<?> cancelBookingsByUserId(@PathVariable("userId") Long userId, @PathVariable("bookingId") Long bookingId) {
 		    return ResponseEntity.status(HttpStatus.OK)
-		    		.body(userService.cancelBookingsByUserId(userId,  bookingId));
+		    		.body(userService.cancelBooking(userId,bookingId));
 		}
 		
 		@GetMapping("/bookings/update-status")
 		public ResponseEntity<String> manuallyUpdateBookings() {
-		    userService.updateCompletedBookings();
+		    userService.updateCompletedBookingsAndRooms();
 		    return ResponseEntity.ok("Bookings updated");
 		}
 
-		
-		//--------SERVICES---------
-		
-		//REQUEST SERVICE
-		@PostMapping("/services/request-service")
-		public ResponseEntity<?> requestService(@RequestBody @Valid RequestServiceDTO dto){
-				return ResponseEntity.status(HttpStatus.CREATED)
-						.body(userService.requestService(dto));
-			
+		@GetMapping("/rooms")
+		public ResponseEntity<?> getAllRooms()
+		{
+			return ResponseEntity
+					.ok(userService.getAllRooms());
 		}
 		
-	}
-
+		@GetMapping("/rooms/id/{roomId}")
+		public ResponseEntity<?> getRoomById(@PathVariable("roomId") Long roomId)
+		{
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(userService.getRoomById(roomId));
+		}
+		
+}

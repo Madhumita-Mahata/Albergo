@@ -92,7 +92,9 @@
 			<artifactId>commons-lang3</artifactId>
 			<!-- <version>3.14.0</version> -->
 		</dependency>
-	<!-- 
+		
+		<!--SPRING SECURITY DEPENDENCIES-->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -102,7 +104,38 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	-->	
+		
+		
+		<!--JWT DEPENDENCIES-->
+		
+		
+		<!--JWT DEPENDENCIES-->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.11.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.5</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId>
+		    <version>0.11.5</version>
+		    <scope>runtime</scope>
+		</dependency>
+		
+		
+		<!--RAZORPAY-->
+		<dependency>
+		    <groupId>com.razorpay</groupId>
+		    <artifactId>razorpay-java</artifactId>
+		    <version>1.4.4</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

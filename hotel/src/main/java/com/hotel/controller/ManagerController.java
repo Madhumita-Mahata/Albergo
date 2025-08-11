@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.dto.RoomReqDto;
 import com.hotel.entities.Room;
+import com.hotel.service.CustomerService;
 import com.hotel.service.ManagerService;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ import lombok.AllArgsConstructor;
 public class ManagerController {
 	
 	private final ManagerService managerService;
+	
 	
 	@PostMapping("/room")
 	public ResponseEntity<?> addRoom(@RequestBody RoomReqDto roomDto)
@@ -41,11 +43,11 @@ public class ManagerController {
 				.ok(managerService.getAllRooms());
 	}
 	
-	@GetMapping("/rooms/id/{roomid}")
-	public ResponseEntity<?> getRoomById(@PathVariable("roomid") Long roomid)
+	@GetMapping("/rooms/id/{roomId}")
+	public ResponseEntity<?> getRoomById(@PathVariable("roomId") Long roomId)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(managerService.getRoomById(roomid));
+				.body(managerService.getRoomById(roomId));
 	}
 	
 	@GetMapping("/rooms/no/{no}")
@@ -62,11 +64,11 @@ public class ManagerController {
 				.body(managerService.getRoomByCategory(category));
 	}
 	
-	@PutMapping("/rooms/{roomid}")
-	public ResponseEntity<?> updateRoom(@PathVariable("roomid") Long roomid, @RequestBody Room room)
+	@PutMapping("/rooms/{roomId}")
+	public ResponseEntity<?> updateRoom(@PathVariable("roomId") Long roomId, @RequestBody Room room)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(managerService.updateRoom(roomid, room));
+				.body(managerService.updateRoom(roomId, room));
 	}
 	
 	@PutMapping("/rooms/no/{no}")
@@ -76,8 +78,8 @@ public class ManagerController {
 				.body(managerService.updateRoomByRoomNumber(no, room));
 	}
 	
-	@DeleteMapping("/rooms/{roomid}")
-	public ResponseEntity<?> deleteRoom(@PathVariable("roomid") Long roomid)
+	@DeleteMapping("/rooms/{roomId}")
+	public ResponseEntity<?> deleteRoom(@PathVariable("roomId") Long roomid)
 	{
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(managerService.deleteRoom(roomid));
@@ -91,5 +93,20 @@ public class ManagerController {
 				.body(managerService.deleteRoom(roomNo));
 		
 	}
+	
+	//GET REVIEW BY USERID
+	@GetMapping("/{userId}/reviews")
+	public ResponseEntity<?> getReviewByUserId(@PathVariable("userId") Long userId){
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(managerService.getReviewById(userId));
+	}
+			
+	@GetMapping("/all/reviews")
+	public ResponseEntity<?> getAllReviews()
+	{
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(managerService.getAllReviews());
+	}
+		
 	
 }
